@@ -10,6 +10,9 @@ module.exports = {
         "secondary": "#FF724F",
         "background": "#004066"
       },
+      borderRadius: {
+        "titleBadge": "0.9em 0.4em"
+      }
     },
   },
   plugins: [],
