@@ -1,7 +1,8 @@
 import TableButton from "./TableButton";
 
 
-export default function ProductTableRows({ products }) {
+export default function ProductTableRows({ products, openDialog }) {
+
     return (
         <tbody>
         {!products.isLoading && products.data !== null ? products.data.map((product) => (
@@ -32,8 +33,8 @@ export default function ProductTableRows({ products }) {
                         </p>
                     </td>
                     <td className="p-4 border-b border-blue-gray-50 inline-flex gap-x-4">
-                        <TableButton onClick={""} color={"green-500"}>Edit</TableButton>
-                        <TableButton onClick={""} color={"secondary"}>Delete</TableButton>
+                        <TableButton onClickAction={() => openDialog("edit", product)} color={"bg-green-500"}>Ajouter</TableButton>
+                        <TableButton onClickAction={() => openDialog("delete", product)} color={"bg-secondary"}>Supprimer</TableButton>
                     </td>
                 </tr>
             )) :
