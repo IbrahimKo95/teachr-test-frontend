@@ -1,7 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
+const apiUrl = process.env.REACT_APP_API_URL
+
 export const fetchProduct = createAsyncThunk("fetchProduct", async () => {
-    const response = await fetch("http://localhost:8000/api/products")
+    const response = await fetch(`${apiUrl}/products`)
     return response.json()
 })
 
