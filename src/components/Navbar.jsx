@@ -14,10 +14,10 @@ export default function Navbar() {
             </div>
             <ul className="gap-x-3 items-center hidden lg:flex">
                 <li>
-                    <NavbarButton text={"PRODUITS"} color={"bg-primary"}/>
+                    <NavbarButton text={"PRODUITS"} color={"bg-primary"} destination="/"/>
                 </li>
                 <li>
-                    <NavbarButton text={"CATÉGORIES"} color={"bg-secondary"}/>
+                    <NavbarButton text={"CATÉGORIES"} color={"bg-secondary"} destination="/categories"/>
                 </li>
             </ul>
         </nav>
