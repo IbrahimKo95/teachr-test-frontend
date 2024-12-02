@@ -1,5 +1,7 @@
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
 import {OctagonAlertIcon} from "lucide-react";
+import {useDispatch, useSelector} from "react-redux";
+import {deleteProduct} from "../../redux/productSlicer";
 
 export function CreateProductDialog({open, close}) {
     return (
@@ -109,6 +111,14 @@ export function EditProductDialog({open, close, product}) {
 }
 
 export function DeleteProductDialog({open, close, product}) {
+    const dispatch = useDispatch()
+    const products = useSelector(state => state.product)
+
+    function deleteFunction() {
+        dispatch(deleteProduct(product.id))
+        close('delete')
+    }
+
     if (!product) {
         return null;
     }
@@ -136,14 +146,14 @@ export function DeleteProductDialog({open, close, product}) {
                                     </DialogTitle>
                                     <div className="mt-2">
                                         <p className="text-sm text-gray-500">
-                                            Etes vous sûr de vouloir supprimer ce produit? Toutes les données seront perdues.
+                                            Etes vous sûr de vouloir supprimer ce produit ? Toutes les données seront perdues.
                                         </p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                            <button type="button" className="inline-flex w-full justify-center rounded-md bg-secondary px-3 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-75 sm:ml-3 sm:w-auto">
+                            <button onClick={() => deleteFunction()} type="button" className="inline-flex w-full justify-center rounded-md bg-secondary px-3 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-75 sm:ml-3 sm:w-auto">
                                 Supprimer
                             </button>
                             <button onClick={() => close('delete')} type="button" className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">

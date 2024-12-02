@@ -33,7 +33,7 @@ export default function ProductTableRows({ products, openDialog }) {
                         </p>
                     </td>
                     <td className="p-4 border-b border-blue-gray-50 inline-flex gap-x-4">
-                        <TableButton onClickAction={() => openDialog("edit", product)} color={"bg-green-500"}>Ajouter</TableButton>
+                        <TableButton onClickAction={() => openDialog("edit", product)} color={"bg-green-500"}>Modifier</TableButton>
                         <TableButton onClickAction={() => openDialog("delete", product)} color={"bg-secondary"}>Supprimer</TableButton>
                     </td>
                 </tr>
