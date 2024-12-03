@@ -49,6 +49,27 @@ export const updateProduct = createAsyncThunk("updateProduct", async ({ id, prod
     }
 });
 
+export const createProduct = createAsyncThunk("createProduct", async ({ product }, { rejectWithValue }) => {
+    console.log(product)
+    try {
+        const response = await fetch(`${apiUrl}/products`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(product),
+        });
+        if (!response.ok) {
+            const errorData = await response.json();
+            return rejectWithValue(errorData);
+        }
+        return response.json();
+    } catch (error) {
+        return rejectWithValue(error.message);
+    }
+});
+
+
 const productSlice = createSlice({
     name: 'product',
     initialState: {
@@ -95,6 +116,18 @@ const productSlice = createSlice({
         builder.addCase(updateProduct.rejected, (state, action) => {
             state.isLoading = false;
             state.error = action.payload || 'An error occurred while updating the product.';
+        });
+        builder.addCase(createProduct.pending, (state) => {
+            state.isLoading = true
+            state.error = null
+        })
+        builder.addCase(createProduct.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.data = [...state.data, action.payload]
+        })
+        builder.addCase(createProduct.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.payload || 'An error occurred while creating a product.';
         });
     }
 })
