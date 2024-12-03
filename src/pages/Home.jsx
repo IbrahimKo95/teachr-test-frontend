@@ -45,7 +45,7 @@ function Home() {
     return (
         <Container>
             <p className="font-black text-2xl">Liste des <TitleBadge color={"primary"}>Produits</TitleBadge></p>
-            <div className="px-[5%] lg:px-[10%] xl:px-[20%] relative flex flex-col w-full h-full overflow-auto text-gray-700 bg-white rounded-xl bg-clip-border mt-20">
+            <div className="px-[5%] lg:px-[10%] xl:px-[20%] relative flex flex-col w-full h-full xl:overflow-hidden overflow-auto text-gray-700 bg-white rounded-xl bg-clip-border mt-20">
                 <ErrorBanner/>
                 <table className="w-full text-left table-auto min-w-max">
                     <thead>

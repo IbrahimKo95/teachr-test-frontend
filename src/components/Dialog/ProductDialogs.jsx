@@ -3,6 +3,7 @@ import {OctagonAlertIcon} from "lucide-react";
 import {useDispatch, useSelector} from "react-redux";
 import {deleteProduct, updateProduct} from "../../redux/productSlicer";
 import {useEffect, useState} from "react";
+import {fetchCategory} from "../../redux/categorySlicer";
 
 export function CreateProductDialog({open, close}) {
     return (
@@ -60,14 +61,16 @@ export function EditProductDialog({open, close, product}) {
     const [name, setName] = useState("")
     const [description, setDescription] = useState("")
     const [price, setPrice] = useState()
-    const [category, setCategory] = useState("")
+    const [category, setCategory] = useState()
     const dispatch = useDispatch()
+    const categories = useSelector(state => state.category)
     useEffect(() => {
         if (product) {
             setName(product.name);
             setDescription(product.description);
             setPrice(product.price);
             setCategory(product.category.id);
+            dispatch(fetchCategory())
         }
     }, [product]);
 
@@ -102,7 +105,7 @@ export function EditProductDialog({open, close, product}) {
                                     <form className="mt-2 flex flex-col gap-y-4" onSubmit={handleSubmit}>
                                         <div>
                                             <label>Nom</label>
-                                            <input onChange={(e) => setName(e.target.value)} className="w-full bg-gray-200 h-10 px-2" defaultValue={product.name}
+                                            <input onChange={(e) => setName(e.target.valueAsNumber)} className="w-full bg-gray-200 h-10 px-2" defaultValue={product.name}
                                                    required={true}/>
                                         </div>
                                         <div>
@@ -112,8 +115,13 @@ export function EditProductDialog({open, close, product}) {
                                         </div>
                                         <div>
                                             <label>Catégorie</label>
-                                            <select className="w-full bg-gray-200 h-10 px-2" required={true}>
+                                            <select onChange={(e) => setCategory(e.currentTarget.value)} className="w-full bg-gray-200 h-10 px-2" required={true}>
                                                 <option value={product.category.id}>{product.category.name}</option>
+                                                {
+                                                    !categories.isLoading && categories.data !== null ? categories.data.filter((category) => category.id !== product.category.id).map((category) => (
+                                                        <option key={category.id} value={category.id}>{category.name}</option>
+                                                    )) : null
+                                                }
                                             </select>
                                         </div>
                                         <div>

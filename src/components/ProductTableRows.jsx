@@ -13,7 +13,7 @@ export default function ProductTableRows({ products, openDialog }) {
                         </p>
                     </td>
                     <td className="p-4 border-b border-blue-gray-50">
-                        <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                        <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900 truncate max-w-96">
                             {product.description}
                         </p>
                     </td>
