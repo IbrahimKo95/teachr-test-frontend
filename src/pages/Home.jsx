@@ -7,6 +7,7 @@ import {useEffect, useState} from "react";
 import ProductTableRows from "../components/ProductTableRows";
 import TableButton from "../components/TableButton";
 import {CreateProductDialog, DeleteProductDialog, EditProductDialog} from "../components/Dialog/ProductDialogs";
+import ErrorBanner from "../components/ErrorBanner";
 
 function Home() {
     const dispatch = useDispatch()
@@ -45,6 +46,7 @@ function Home() {
         <Container>
             <p className="font-black text-2xl">Liste des <TitleBadge color={"primary"}>Produits</TitleBadge></p>
             <div className="px-[5%] lg:px-[10%] xl:px-[20%] relative flex flex-col w-full h-full overflow-auto text-gray-700 bg-white rounded-xl bg-clip-border mt-20">
+                <ErrorBanner/>
                 <table className="w-full text-left table-auto min-w-max">
                     <thead>
                     <tr>
@@ -81,8 +83,8 @@ function Home() {
                     <ProductTableRows products={products} openDialog={openDialog}/>
                 </table>
             </div>
-            {createDialogOpen ?? <CreateProductDialog open={createDialogOpen} close={(dialog) => closeDialog(dialog)}/>}
-            {editDialogOpen ?? <EditProductDialog open={editDialogOpen} close={(dialog) => closeDialog(dialog)} product={selectedProduct}/>}
+            <CreateProductDialog open={createDialogOpen} close={(dialog) => closeDialog(dialog)}/>
+            <EditProductDialog open={editDialogOpen} close={(dialog) => closeDialog(dialog)} product={selectedProduct}/>
             <DeleteProductDialog open={deleteDialogOpen} close={(dialog) => closeDialog(dialog)} product={selectedProduct}/>
         </Container>
     );

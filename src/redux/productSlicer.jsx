@@ -2,54 +2,101 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
 const apiUrl = process.env.REACT_APP_API_URL
 
-export const fetchProduct = createAsyncThunk("fetchProduct", async () => {
-    const response = await fetch(`${apiUrl}/products`)
-    return response.json()
-})
-
-export const deleteProduct = createAsyncThunk("deleteProduct", async (id) => {
-    const response = await fetch(`${apiUrl}/products/${id}`, {
-        method: 'DELETE'
-    })
-    if (!response.ok) {
-        throw new Error("Erreur lors de la suppression");
+export const fetchProduct = createAsyncThunk("fetchProduct", async (_, { rejectWithValue }) => {
+    try {
+        const response = await fetch(`${apiUrl}/products`);
+        if (!response.ok) {
+            const errorData = await response.json();
+            return rejectWithValue(errorData);
+        }
+        return response.json();
+    } catch (error) {
+        return rejectWithValue(error.message);
     }
-    return id;
+});
+
+export const deleteProduct = createAsyncThunk("deleteProduct", async (id, {rejectWithValue}) => {
+    try {
+        const response = await fetch(`${apiUrl}/products/${id}`, {
+            method: 'DELETE'
+        })
+        if (!response.ok) {
+            const errorData = await response.json();
+            return rejectWithValue(errorData);
+        }
+        return id;
+    } catch (error) {
+        return rejectWithValue(error.message);
+    }
 })
 
-const todoSlice = createSlice({
+export const updateProduct = createAsyncThunk("updateProduct", async ({ id, product }, { rejectWithValue }) => {
+    try {
+        const response = await fetch(`${apiUrl}/products/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(product),
+        });
+        if (!response.ok) {
+            const errorData = await response.json();
+            return rejectWithValue(errorData);
+        }
+        return response.json();
+    } catch (error) {
+        return rejectWithValue(error.message);
+    }
+});
+
+const productSlice = createSlice({
     name: 'product',
     initialState: {
         isLoading: false,
         data: null,
-        error: false
+        error: null
     },
     extraReducers: (builder) => {
         builder.addCase(fetchProduct.pending, (state) => {
             state.isLoading = true
-            state.error = false
+            state.error = null
         })
         builder.addCase(fetchProduct.fulfilled, (state, action) => {
             state.isLoading = false
             state.data = action.payload
         })
-        builder.addCase(fetchProduct.rejected, (state) => {
+        builder.addCase(fetchProduct.rejected, (state, action) => {
             state.isLoading = false
-            state.error = true
+            state.error = action.payload || 'An error occurred while fetching the products.';
         })
         builder.addCase(deleteProduct.pending, (state) => {
             state.isLoading = true
-            state.error = false
+            state.error = null
         })
         builder.addCase(deleteProduct.fulfilled, (state, action) => {
             state.isLoading = false
             state.data = state.data.filter((product) => product.id !== action.payload);
         })
-        builder.addCase(deleteProduct.rejected, (state) => {
+        builder.addCase(deleteProduct.rejected, (state, action) => {
             state.isLoading = false
-            state.error = true
+            state.error = state.action
+            state.error = action.payload || 'An error occurred while deleting the product.';
         })
+        builder.addCase(updateProduct.pending, (state) => {
+            state.isLoading = true
+            state.error = null
+        })
+        builder.addCase(updateProduct.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.data = state.data.map((product) =>
+                product.id === action.payload.id ? { ...product, ...action.payload } : product
+            );
+        })
+        builder.addCase(updateProduct.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.payload || 'An error occurred while updating the product.';
+        });
     }
 })
 
-export default todoSlice.reducer
+export default productSlice.reducer
