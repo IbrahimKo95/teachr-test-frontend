@@ -1,5 +1,5 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {deleteProduct, fetchProduct} from "./productSlicer";
+import {createProduct, deleteProduct, fetchProduct, updateProduct} from "./productSlicer";
 
 const apiUrl = process.env.REACT_APP_API_URL
 
@@ -8,6 +8,58 @@ export const fetchCategory = createAsyncThunk("fetchCategory", async () => {
     return response.json()
 })
 
+export const deleteCategory = createAsyncThunk("deleteCategory", async (id, {rejectWithValue}) => {
+    try {
+        const response = await fetch(`${apiUrl}/categories/${id}`, {
+            method: 'DELETE'
+        })
+        if (!response.ok) {
+            const errorData = await response.json();
+            return rejectWithValue(errorData);
+        }
+        return id;
+    } catch (error) {
+        return rejectWithValue(error.message);
+    }
+})
+
+export const updateCategory = createAsyncThunk("updateCategory", async ({ id, category }, { rejectWithValue }) => {
+    try {
+        const response = await fetch(`${apiUrl}/categories/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(category),
+        });
+        if (!response.ok) {
+            const errorData = await response.json();
+            return rejectWithValue(errorData);
+        }
+        return response.json();
+    } catch (error) {
+        return rejectWithValue(error.message);
+    }
+});
+
+export const createCategory = createAsyncThunk("createCategory", async ({ category }, { rejectWithValue }) => {
+    try {
+        const response = await fetch(`${apiUrl}/categories`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(category),
+        });
+        if (!response.ok) {
+            const errorData = await response.json();
+            return rejectWithValue(errorData);
+        }
+        return response.json();
+    } catch (error) {
+        return rejectWithValue(error.message);
+    }
+});
 
 const categorySlice = createSlice({
     name: 'category',
@@ -29,6 +81,45 @@ const categorySlice = createSlice({
             state.isLoading = false
             state.error = true
         })
+        builder.addCase(deleteCategory.pending, (state) => {
+            state.isLoading = true
+            state.error = null
+        })
+        builder.addCase(deleteCategory.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.data = state.data.filter((product) => product.id !== action.payload);
+        })
+        builder.addCase(deleteCategory.rejected, (state, action) => {
+            state.isLoading = false
+            state.error = state.action
+            state.error = action.payload || 'An error occurred while deleting the product.';
+        })
+        builder.addCase(updateCategory.pending, (state) => {
+            state.isLoading = true
+            state.error = null
+        })
+        builder.addCase(updateCategory.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.data = state.data.map((product) =>
+                product.id === action.payload.id ? { ...product, ...action.payload } : product
+            );
+        })
+        builder.addCase(updateCategory.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.payload || 'An error occurred while updating the product.';
+        });
+        builder.addCase(createCategory.pending, (state) => {
+            state.isLoading = true
+            state.error = null
+        })
+        builder.addCase(createCategory.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.data = [...state.data, action.payload]
+        })
+        builder.addCase(createCategory.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.payload || 'An error occurred while creating a category.';
+        });
     }
 })
 
