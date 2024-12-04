@@ -4,12 +4,13 @@ import TableButton from "../components/TableButton";
 import ProductTableRows from "../components/ProductTableRows";
 import ErrorBanner from "../components/ErrorBanner";
 import {useEffect, useState} from "react";
-import {fetchProduct} from "../redux/productSlicer";
-import {fetchCategory} from "../redux/categorySlicer";
+import {fetchProduct, searchProduct} from "../redux/productSlicer";
+import {fetchCategory, searchCategory} from "../redux/categorySlicer";
 import {useDispatch, useSelector} from "react-redux";
 import CategoryTableRows from "../components/CategoryTableRows";
 import {CreateProductDialog, DeleteProductDialog, EditProductDialog} from "../components/Dialog/ProductDialogs";
 import {CreateCategoryDialog, DeleteCategoryDialog, EditCategoryDialog} from "../components/Dialog/CategoryDialogs";
+import SearchBar from "../components/SearchBar";
 
 
 export default function Categories() {
@@ -19,9 +20,15 @@ export default function Categories() {
     const [createDialogOpen, setCreateDialogOpen] = useState(false)
     const [editDialogOpen, setEditDialogOpen] = useState(false)
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+    const [query, setQuery] = useState("")
+
     useEffect(() => {
-        dispatch(fetchCategory())
-    }, []);
+        if (query.length > 0) {
+            dispatch(searchCategory(query))
+        } else {
+            dispatch(fetchCategory())
+        }
+    }, [query]);
 
     function openDialog (dialog, category) {
         if (dialog === "create") {
@@ -47,7 +54,9 @@ export default function Categories() {
     return (
         <Container>
             <p className="font-black text-2xl">Liste des <TitleBadge color={"secondary"}>Catégories</TitleBadge></p>
-            <div className="px-[5%] lg:px-[10%] xl:px-[20%] relative flex flex-col w-full h-full xl:overflow-hidden overflow-auto text-gray-700 bg-white rounded-xl bg-clip-border mt-20 items-center">
+            <SearchBar setQuery={setQuery}/>
+            <div
+                className="px-[5%] lg:px-[10%] xl:px-[20%] relative flex flex-col w-full h-full xl:overflow-hidden overflow-auto text-gray-700 bg-white rounded-xl bg-clip-border mt-20 items-center">
                 <ErrorBanner/>
                 <table className="text-left">
                     <thead>
@@ -58,7 +67,8 @@ export default function Categories() {
                             </p>
                         </th>
                         <th className="p-4 border-b border-blue-gray-100 bg-blue-gray-50 inline-flex">
-                            <TableButton onClickAction={() => openDialog("create",null)} color={"bg-primary"}>Ajouter</TableButton>
+                            <TableButton onClickAction={() => openDialog("create", null)}
+                                         color={"bg-primary"}>Ajouter</TableButton>
                         </th>
                     </tr>
                     </thead>
@@ -66,8 +76,10 @@ export default function Categories() {
                 </table>
             </div>
             <CreateCategoryDialog open={createDialogOpen} close={(dialog) => closeDialog(dialog)}/>
-            <DeleteCategoryDialog open={deleteDialogOpen} close={(dialog) => closeDialog(dialog)} category={selectedCategory}/>
-            <EditCategoryDialog open={editDialogOpen} close={(dialog) => closeDialog(dialog)} category={selectedCategory}/>
+            <DeleteCategoryDialog open={deleteDialogOpen} close={(dialog) => closeDialog(dialog)}
+                                  category={selectedCategory}/>
+            <EditCategoryDialog open={editDialogOpen} close={(dialog) => closeDialog(dialog)}
+                                category={selectedCategory}/>
         </Container>
     )
 }

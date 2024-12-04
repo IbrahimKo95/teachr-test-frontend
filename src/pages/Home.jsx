@@ -2,12 +2,13 @@ import '../App.css';
 import TitleBadge from '../components/TitleBadge';
 import Container from '../components/Container';
 import {useDispatch, useSelector} from "react-redux";
-import {fetchProduct} from "../redux/productSlicer";
+import {fetchProduct, searchProduct} from "../redux/productSlicer";
 import {useEffect, useState} from "react";
 import ProductTableRows from "../components/ProductTableRows";
 import TableButton from "../components/TableButton";
 import {CreateProductDialog, DeleteProductDialog, EditProductDialog} from "../components/Dialog/ProductDialogs";
 import ErrorBanner from "../components/ErrorBanner";
+import SearchBar from "../components/SearchBar";
 
 function Home() {
     const dispatch = useDispatch()
@@ -16,9 +17,15 @@ function Home() {
     const [createDialogOpen, setCreateDialogOpen] = useState(false)
     const [editDialogOpen, setEditDialogOpen] = useState(false)
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+    const [query, setQuery] = useState("")
+
     useEffect(() => {
-        dispatch(fetchProduct())
-    }, []);
+        if (query.length > 0) {
+            dispatch(searchProduct(query))
+        } else {
+            dispatch(fetchProduct())
+        }
+    }, [query]);
 
     function openDialog (dialog, product) {
         if (dialog === "create") {
@@ -45,6 +52,7 @@ function Home() {
     return (
         <Container>
             <p className="font-black text-2xl">Liste des <TitleBadge color={"primary"}>Produits</TitleBadge></p>
+            <SearchBar setQuery={setQuery}/>
             <div className="px-[5%] lg:px-[10%] xl:px-[20%] relative flex flex-col w-full h-full xl:overflow-hidden overflow-auto text-gray-700 bg-white rounded-xl bg-clip-border mt-20">
                 <ErrorBanner/>
                 <table className="w-full text-left table-auto min-w-max">

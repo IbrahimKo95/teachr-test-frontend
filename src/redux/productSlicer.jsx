@@ -69,12 +69,15 @@ export const createProduct = createAsyncThunk("createProduct", async ({ product 
     }
 });
 
+export const searchProduct = createAsyncThunk("searchProduct", async (query, { rejectWithValue }) => {
+    return query;
+})
 
 const productSlice = createSlice({
     name: 'product',
     initialState: {
         isLoading: false,
-        data: null,
+        data: [],
         error: null
     },
     extraReducers: (builder) => {
@@ -129,6 +132,14 @@ const productSlice = createSlice({
             state.isLoading = false;
             state.error = action.payload || 'An error occurred while creating a product.';
         });
+        builder.addCase(searchProduct.pending, (state) => {
+            state.isLoading = true
+            state.error = null
+        })
+        builder.addCase(searchProduct.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.data = state.data.filter((product) => product.name.toLowerCase().includes(action.payload.toLowerCase()));
+        })
     }
 })
 

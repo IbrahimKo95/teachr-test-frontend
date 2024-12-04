@@ -1,5 +1,4 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {createProduct, deleteProduct, fetchProduct, updateProduct} from "./productSlicer";
 
 const apiUrl = process.env.REACT_APP_API_URL
 
@@ -61,6 +60,11 @@ export const createCategory = createAsyncThunk("createCategory", async ({ catego
     }
 });
 
+
+export const searchCategory = createAsyncThunk("searchProduct", async (query, { rejectWithValue }) => {
+    return query;
+})
+
 const categorySlice = createSlice({
     name: 'category',
     initialState: {
@@ -120,6 +124,14 @@ const categorySlice = createSlice({
             state.isLoading = false;
             state.error = action.payload || 'An error occurred while creating a category.';
         });
+        builder.addCase(searchCategory.pending, (state) => {
+            state.isLoading = true
+            state.error = null
+        })
+        builder.addCase(searchCategory.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.data = state.data.filter((category) => category.name.toLowerCase().includes(action.payload.toLowerCase()));
+        })
     }
 })
 
