@@ -1,8 +1,9 @@
 import TableButton from "./TableButton";
+import {useSelector} from "react-redux";
 
 
 export default function ProductTableRows({ products, openDialog }) {
-
+    const {isAuthenticated} = useSelector(state => state.auth)
     return (
         <tbody>
         {!products.isLoading && products.data !== null ? products.data.map((product) => (
@@ -32,15 +33,20 @@ export default function ProductTableRows({ products, openDialog }) {
                             {new Date(product.created_at).toLocaleDateString("fr-FR")}
                         </p>
                     </td>
-                    <td className="p-4 border-b border-blue-gray-50 inline-flex gap-x-4">
-                        <TableButton onClickAction={() => openDialog("edit", product)} color={"bg-green-500"}>Modifier</TableButton>
-                        <TableButton onClickAction={() => openDialog("delete", product)} color={"bg-secondary"}>Supprimer</TableButton>
-                    </td>
+                    {isAuthenticated && (
+                        <td className="p-4 border-b border-blue-gray-50 inline-flex gap-x-4">
+                            <TableButton onClickAction={() => openDialog("edit", product)}
+                                         color={"bg-green-500"}>Modifier</TableButton>
+                            <TableButton onClickAction={() => openDialog("delete", product)}
+                                         color={"bg-secondary"}>Supprimer</TableButton>
+                        </td>
+                    )}
                 </tr>
             )) :
             <tr>
                 <td colSpan="6" className="p-4 text-center">
-                    <div className="w-10 h-10 border-4 mx-auto text-blue-400 text-4xl animate-spin border-gray-300 flex items-center justify-center border-t-blue-400 rounded-full"></div>
+                    <div
+                        className="w-10 h-10 border-4 mx-auto text-blue-400 text-4xl animate-spin border-gray-300 flex items-center justify-center border-t-blue-400 rounded-full"></div>
                 </td>
             </tr>
         }

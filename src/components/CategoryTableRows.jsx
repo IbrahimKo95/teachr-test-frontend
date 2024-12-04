@@ -1,8 +1,9 @@
 import TableButton from "./TableButton";
+import {useSelector} from "react-redux";
 
 
 export default function CategoryTableRows({ categories, openDialog }) {
-
+    const {isAuthenticated} = useSelector(state => state.auth)
     return (
         <tbody>
         {!categories.isLoading && categories.data !== null ? categories.data.map((category) => (
@@ -12,10 +13,12 @@ export default function CategoryTableRows({ categories, openDialog }) {
                             {category.name}
                         </p>
                     </td>
+                    {isAuthenticated && (
                     <td className="p-4 border-b border-blue-gray-50 inline-flex gap-x-4">
                         <TableButton onClickAction={() => openDialog("edit", category)} color={"bg-green-500"}>Modifier</TableButton>
                         <TableButton onClickAction={() => openDialog("delete", category)} color={"bg-secondary"}>Supprimer</TableButton>
                     </td>
+                    )}
                 </tr>
             )) :
             <tr>

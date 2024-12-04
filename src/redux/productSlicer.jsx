@@ -16,9 +16,14 @@ export const fetchProduct = createAsyncThunk("fetchProduct", async (_, { rejectW
 });
 
 export const deleteProduct = createAsyncThunk("deleteProduct", async (id, {rejectWithValue}) => {
+    const token = localStorage.getItem('token')
     try {
         const response = await fetch(`${apiUrl}/products/${id}`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
         })
         if (!response.ok) {
             const errorData = await response.json();
@@ -31,11 +36,13 @@ export const deleteProduct = createAsyncThunk("deleteProduct", async (id, {rejec
 })
 
 export const updateProduct = createAsyncThunk("updateProduct", async ({ id, product }, { rejectWithValue }) => {
+    const token = localStorage.getItem('token')
     try {
         const response = await fetch(`${apiUrl}/products/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(product),
         });

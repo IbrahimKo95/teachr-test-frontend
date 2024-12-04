@@ -8,9 +8,14 @@ export const fetchCategory = createAsyncThunk("fetchCategory", async () => {
 })
 
 export const deleteCategory = createAsyncThunk("deleteCategory", async (id, {rejectWithValue}) => {
+    const token = localStorage.getItem('token')
     try {
         const response = await fetch(`${apiUrl}/categories/${id}`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
         })
         if (!response.ok) {
             const errorData = await response.json();
@@ -23,11 +28,13 @@ export const deleteCategory = createAsyncThunk("deleteCategory", async (id, {rej
 })
 
 export const updateCategory = createAsyncThunk("updateCategory", async ({ id, category }, { rejectWithValue }) => {
+    const token = localStorage.getItem('token')
     try {
         const response = await fetch(`${apiUrl}/categories/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(category),
         });

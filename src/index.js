@@ -8,6 +8,7 @@ import {store} from "./redux/store";
 import {BrowserRouter, Router, Route, Routes} from "react-router-dom";
 import Categories from "./pages/Categories";
 import Footer from "./components/Footer";
+import Login from "./pages/Login";
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
@@ -17,6 +18,7 @@ root.render(
               <Routes>
                   <Route path="/" element={<Home />} />
                   <Route path="/categories" element={<Categories />} />
+                  <Route path="/login" element={<Login />}/>
               </Routes>
               <Footer/>
           </Provider>
