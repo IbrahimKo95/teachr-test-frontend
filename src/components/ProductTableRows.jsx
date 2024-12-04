@@ -8,27 +8,27 @@ export default function ProductTableRows({ products, openDialog }) {
         {!products.isLoading && products.data !== null ? products.data.map((product) => (
                 <tr key={product.id}>
                     <td className="p-4 border-b border-blue-gray-50">
-                        <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                        <p className="block text-sm antialiased font-normal leading-normal text-blue-gray-900">
                             {product.name}
                         </p>
                     </td>
                     <td className="p-4 border-b border-blue-gray-50">
-                        <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900 truncate max-w-52 2xl:max-w-96">
+                        <p className="block text-sm antialiased font-normal leading-normal text-blue-gray-900 truncate max-w-52 2xl:max-w-96">
                             {product.description}
                         </p>
                     </td>
                     <td className="p-4 border-b border-blue-gray-50">
-                        <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                        <p className="block text-sm antialiased font-normal leading-normal text-blue-gray-900">
                             {product.price} €
                         </p>
                     </td>
                     <td className="p-4 border-b border-blue-gray-50">
-                        <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                        <p className="block text-sm antialiased font-normal leading-normal text-blue-gray-900">
                             {product.category.name}
                         </p>
                     </td>
                     <td className="p-4 border-b border-blue-gray-50">
-                        <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                        <p className="block text-sm antialiased font-normal leading-normal text-blue-gray-900">
                             {new Date(product.created_at).toLocaleDateString("fr-FR")}
                         </p>
                     </td>

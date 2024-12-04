@@ -8,7 +8,7 @@ export default function CategoryTableRows({ categories, openDialog }) {
         {!categories.isLoading && categories.data !== null ? categories.data.map((category) => (
                 <tr key={category.id}>
                     <td className="p-4 border-b border-blue-gray-50">
-                        <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                        <p className="block text-sm antialiased font-normal leading-normal text-blue-gray-900">
                             {category.name}
                         </p>
                     </td>
